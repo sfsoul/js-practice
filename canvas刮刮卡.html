@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+            *{
+                margin:0;
+                padding:0;
+            }
+            #card{
+                width:320px;
+                height:568px;
+                margin:0 auto;
+                background: url(http://www.w3cfuns.com/misc.php?mod=attach&genre=editor&aid=3b7811d6e94f72c4b3bd4e13a2e6fb5d) no-repeat;
+                background-size: 320px 568px;
+                position: relative;
+            }
+            #myCanvas{
+                position: absolute;
+                left:30px;
+                top:192px;
+            }
+            #p1{
+                position: absolute;
+                left:30px;
+                top:192px;
+                width:261px;
+                height:131px;
+                font-size:40px;
+                color: deepskyblue;
+                line-height:131px;
+                text-align: center;
+            }
+    </style>
+</head>
+<body>
+            <div id="card">
+                <p id="p1">一等奖</p>
+                <canvas id="myCanvas" width="261" height="131"></canvas>
+            </div>
+
+            <script>
+                    function randomFun(m,n){
+                        return Math.floor(Math.random()*(n-m+1)+m);
+                    }
+                    var arr = ["一等奖","二等奖","三等奖","谢谢惠顾"];
+                    //随机奖对应得下标
+                    var index = randomFun(0,arr.length - 1);
+                    //显示奖项
+                    var p1 = document.getElementById("p1");
+                    p1.innerHTML = arr[index];
+
+
+                    var cradObj = document.getElementById("card"),
+                        pObj = document.getElementById("p1"),
+                        canvas = document.getElementById("myCanvas"),
+                        canvasObj = canvas.getContext("2d");
+
+                    canvasObj.fillStyle =  "gray";
+                    canvasObj.fillRect(0,0,canvas.width,canvas.height);
+
+                    canvas.onmousedown = function(){
+                        canvas.onmousemove = function(e){
+                            var event1 = window.event || e;
+
+                            var X = event1.offsetX,
+                                Y = event1.offsetY;
+
+                            canvasObj.globalCompositeOperation = "destination-out";
+
+                            canvasObj.beginPath();
+                            canvasObj.arc(X,Y,20,0,Math.PI*2,false);
+                            canvasObj.fill();
+
+                            var imageDate = canvasObj.getImageData(0,0,canvas.width,canbas.height);
+                            var color = imageDate.data;
+                            var count = 0;
+                            for(var i=0;i<colors.length;i+=4){
+                                if(colors[i+3] == 0){
+                                    count++;
+                                }
+                            }
+
+                            if(count > colors.length/4*0.7){
+                                canvasObj.clearRect(0,0,canvas.width,canvas.height);
+                            }
+                        }
+
+                        //添加鼠标松开事件
+                        canvas.onmouseup = function(){
+                            canvas.onmousemove = null;
+                        }
+                    }
+            </script>
+</body>
+</html>
