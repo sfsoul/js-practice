@@ -19,7 +19,7 @@
         <script>
             window.onload = function(){
                 var canvas = document.getElementById("canvas"),
-                    context = canvas.getContext("2d"),
+                    ctx = canvas.getctx("2d"),
                     cirX = canvas.width/2, //canvas x轴的中点
                     cirY = canvas.height/2, //canvas y轴的中点
                     rad = Math.PI*2/100, //360度的百分之一
@@ -29,39 +29,39 @@
 
                 //绘制最外层小圈
                 function writeCircle(){
-                    context.save();
-                    context.beginPath();
-                    context.strokeStyle = "#49f";
-                    context.arc(cirX,cirY,r,0,Math.PI*2,false);
-                    context.stroke();
-                    context.restore();
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.strokeStyle = "#49f";
+                    ctx.arc(cirX,cirY,r,0,Math.PI*2,false);
+                    ctx.stroke();
+                    ctx.restore();
                 }
 
                 //绘制文本(因为数字是动态的，需要传入一个参数n来代表百分比的数字，为防止传入的为小数，可通过toFixed()设置小数点后为0位数)
                 function writeText(n){
-                    context.save();
-                    context.strokeStyle = "#49f";
-                    context.font = "40px Arial";
-                    context.strokeText(n.toFixed(0)+"%",cirX-30,cirY+10);
-                    context.stroke();
-                    context.restore();
+                    ctx.save();
+                    ctx.strokeStyle = "#49f";
+                    ctx.font = "40px Arial";
+                    ctx.strokeText(n.toFixed(0)+"%",cirX-30,cirY+10);
+                    ctx.stroke();
+                    ctx.restore();
                 }
 
                 //绘制外层大圈(这里需要注意用arc()绘制圆的时候起点在3点钟方向，所以设置-Math.PI/2使起点在12点钟方向)
                 //-Math.PI/2+rad*n 是因为蓝色外圈是按角度画的，所以n需要乘以rad，即100%为360度，同时也需要将方向设置为12点钟方向
                 function writeBlue(n){
-                    context.save();
-                    context.strokeStyle = "#49f";
-                    context.lineWidth = 4;
-                    context.beginPath();
-                    context.arc(cirX,cirY,r,-Math.PI/2,-Math.PI/2+rad*n,false);
-                    context.stroke();
-                    context.restore();
+                    ctx.save();
+                    ctx.strokeStyle = "#49f";
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.arc(cirX,cirY,r,-Math.PI/2,-Math.PI/2+rad*n,false);
+                    ctx.stroke();
+                    ctx.restore();
                 }
 
                 function animate(){
                     //清除画布,重新绘制
-                    context.clearRect(0,0,canvas.width,canvas.height);
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
 
                     writeCircle();
                     writeText(n);
