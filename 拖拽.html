@@ -4,14 +4,111 @@
     <meta charset="UTF-8">
     <title>Title</title>
    <style>
-	*{
-        margin:0;
-        padding:0;
-    }
+        *{
+            margin:0;
+            padding:0;
+        }
+        #box{
+            width:100px;
+            height:100px;
+            position: absolute;
+            left:0;
+            top:0;
+            background-color: yellowgreen;
+        }
   </style>
 		
 </head>
 <body>
+        <div id="box"></div>
+        <script>
+            var boxDom = document.getElementById("box"),
+                flag = false; //标记是否按下鼠标
+            //记录下鼠标当前的坐标位置
+            var cur = {
+                x:0,
+                y:0
+            }
+            var nx,ny,dx,dy,x,y;
+            //鼠标按下
+            function down(){
+                flag = true;
+                var touch;
+                if(event.touches){
+                    touch = event.touches[0];
+                }else{
+                    touch = event;
+                }
+                cur.x = touch.clientX;
+                cur.y = touch.clientY;
+                dx = boxDom.offsetLeft;
+                dy = boxDom.offsetTop;
+            }
+            //鼠标移动
+            function move(){
+                if(flag){
+                    var touch;
+                    if(event.touches){
+                        touch = event.touches[0];
+                    }else{
+                        touch = event;
+                    }
+                    //最终停止的坐标减去第一次按下时的坐标
+                    nx = touch.clientX - cur.x;
+                    ny = touch.clientY - cur.y;
+                    x = nx+dx;
+                    y = ny+dy;
+                    //最大运动区域范围(用当前屏幕的宽高减去div的宽高，得出移动的最大区域范围)
+                    var maxX = document.documentElement.clientWidth - boxDom.offsetWidth,
+                        maxY = document.documentElement.clientHeight - boxDom.offsetHeight;
+                    //限制滑动区域，不能超出当前页面
+                    if(flag){
+                        if(x>maxX){
+                            x=maxX;
+                        }
+                        if(y>maxY){
+                            y=maxY;
+                        }
+                        if(x<0){
+                            x=0;
+                        }
+                        if(y<0){
+                            y=0;
+                        }
+                    }
+                    boxDom.style.left = x+"px";
+                    boxDom.style.top = y+"px";
+                    //阻止页面的滑动默认事件
+                    document.addEventListener("touchmove",function(){
+                        event.preventDefault();
+                    },false);
+                }
+            }
 
+            function end(){
+                flag = false;
+            }
+
+            //这里需要注意一点：就是PC端移动的时候，对象要写为document而不是boxDom，因为快速滑动的时候
+            //不可能保证手一直是放在div上面的，改为document后，移动的时候手在div前面一点也能指引移动。
+            boxDom.addEventListener("mousedown",function(){
+                down();
+            },false);
+            boxDom.addEventListener("touchstart",function(){
+                down();
+            },false);
+            document.addEventListener("mousemove",function(){
+                move();
+            },false);
+            boxDom.addEventListener("touchmove",function(){
+                move();
+            },false);
+            document.addEventListener("mouseup",function(){
+                end();
+            },false);
+            boxDom.addEventListener("touchend",function(){
+                end();
+            },false);
+        </script>
 </body>
 </html>
