@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #myCanvas{
+            position: absolute;
+            left:0px;
+            top:-5px;
+            z-index:2;
+        }
+        #background{
+            z-index: 1;
+            position: absolute;
+            left:0px;
+            top:0px;
+        }
+    </style>
+</head>
+<body onload="preperation()">
+        <canvas id="myCanvas" width="900" height="600">
+            Your browser does not support the HTML5 canvas tag.
+        </canvas>
+        <canvas id="background" width="1600" height="700"></canvas>
+
+        <script>
+            //绘制国旗背景
+            var col = new Array("red","brown");
+            var ticker = 0;
+            var step = 0;
+            function drawBackground(){
+                var g = document.getElementById("background").getContext("2d");
+                //context.createLinearGradient(渐变开始点的x坐标，y坐标，渐变结束点的x坐标，y坐标)
+                var grd = g.createLinearGradient(-560+ticker,0,1400+ticker,0);
+                for(var i=0;i<10;i++)
+                    grd.addColorStop(i/10,col[(i+step)%col.length]);
+                    ticker = ticker+10;
+                    if(ticker>=196){
+                        ticker = 0;
+                        step++;
+                    }
+                    g.fillStyle = grd;
+                    g.fillRect(0,0,1600,700);
+            }
+            //页面一加载执行preperation函数。
+            function preperation(){
+                setInterval('drawBackground()',100);
+            }
+
+            //绘制五角星
+            var x = new Array(0,12,54,18,28,0,-28,-18,-54,-12,0);   //五角星样品坐标x数组
+            var y = new Array(-53,-17,-17,1,45,19,45,1,-17,-17,-53); //五角星样品坐标y数组
+            var M = Math,
+                Round = M.round;
+
+            var c = document.getElementById("myCanvas");
+            var ctx = c.getContext("2d");
+            //样品数组x轴坐标a，和y轴坐标b
+            //指定位置[locationX,locationY]
+            //真实五角星的大小与样品五角星尺寸之比f
+            //五角星画完后，旋转的角度rotation
+            function star(a,b,locationX,locationY,f,rotation){
+                ctx.save();
+                //设置位置
+                ctx.translate(locationX,locationY);
+                //旋转角度(1即为1度)
+                ctx.rotate(rotation*Math.PI/180.0);
+                ctx.beginPath();
+                ctx.moveTo(Math.round(a[0]*f),Math.round(b[0]*f));
+                for(var i=1;i<a.length;i++)
+                    ctx.lineTo(Math.round(a[i]*f),Math.round(b[i]*f));
+                    ctx.closePath();
+                    ctx.fillStyle = "yellow";
+                    ctx.fill();
+                    ctx.restore();
+            }
+            star(x,y,165,165,1.4,0); //画大五角星
+            star(x,y,301,65,0.5,30); //画小五角星
+            star(x,y,362,126,0.5,-30); //画小五角星
+            star(x,y,359,216,0.5,0); //画小五角星
+            star(x,y,301,273,0.5,30); //画小五角星
+        </script>
+</body>
+</html>
